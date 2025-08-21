@@ -1,0 +1,89 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the API for the service-mqtt device management service.",
+        "title": "service-mqtt API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:9091",
+    "basePath": "/",
+    "paths": {
+        "/devices": {
+            "post": {
+                "description": "Creates a new device with MQTT credentials.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "devices"
+                ],
+                "summary": "Add a new device",
+                "parameters": [
+                    {
+                        "description": "Device Type",
+                        "name": "device",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/http.addDeviceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/devices.Device"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "devices.Device": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "mqtt_password": {
+                    "type": "string"
+                },
+                "mqtt_user": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "http.addDeviceRequest": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

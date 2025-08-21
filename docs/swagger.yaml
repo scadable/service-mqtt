@@ -1,0 +1,58 @@
+basePath: /
+definitions:
+  devices.Device:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      mqtt_password:
+        type: string
+      mqtt_user:
+        type: string
+      type:
+        type: string
+    type: object
+  http.addDeviceRequest:
+    properties:
+      type:
+        type: string
+    type: object
+host: localhost:9091
+info:
+  contact: {}
+  description: This is the API for the service-mqtt device management service.
+  title: service-mqtt API
+  version: "1.0"
+paths:
+  /devices:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new device with MQTT credentials.
+      parameters:
+      - description: Device Type
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/http.addDeviceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/devices.Device'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add a new device
+      tags:
+      - devices
+swagger: "2.0"
