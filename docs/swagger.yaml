@@ -18,7 +18,6 @@ definitions:
       type:
         type: string
     type: object
-host: localhost:9091
 info:
   contact: {}
   description: This is the API for the service-mqtt device management service.

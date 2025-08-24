@@ -1,0 +1,61 @@
+# deploy/03-mqtt-application.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mqtt-app-configmap
+  namespace: scadable-io
+data:
+  LISTEN_ADDR: ":9091"
+  NATS_URL: "nats://nats-cluster-raw-0.nats-cluster-raw.scadable-core.svc.cluster.local:4222"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-mqtt
+  namespace: scadable-io
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-mqtt
+  template:
+    metadata:
+      labels:
+        app: service-mqtt
+    spec:
+      imagePullSecrets:
+        - name: ovh-registry-secret
+      containers:
+        - name: service-mqtt
+          image: wuo1g9bo.c1.bhs5.container-registry.ovh.net/scadable/service-mqtt:latest
+          ports:
+            - containerPort: 9091
+              name: http
+            - containerPort: 1883
+              name: mqtt-tcp
+          envFrom:
+            - configMapRef:
+                name: mqtt-app-configmap
+          env:
+            - name: DATABASE_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-mqtt-secret
+                  key: DATABASE_DSN
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-mqtt
+  namespace: scadable-io
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 9091
+      targetPort: http
+    - name: mqtt
+      port: 1883
+      targetPort: mqtt-tcp
+  selector:
+    app: service-mqtt

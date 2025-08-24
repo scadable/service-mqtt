@@ -1,0 +1,8 @@
+# 05-tcp-services-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tcp-services
+  namespace: ingress-nginx
+data:
+  1883: "scadable-io/service-mqtt:1883"

@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-mqtt
+  namespace: scadable-io
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-mqtt
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-mqtt
+  namespace: scadable-io
+spec:
+  serviceName: "postgres-mqtt"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-mqtt
+  template:
+    metadata:
+      labels:
+        app: postgres-mqtt
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-mqtt-secret
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-mqtt-pvc

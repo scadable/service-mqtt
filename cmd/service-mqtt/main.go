@@ -21,7 +21,6 @@ import (
 // @title           service-mqtt API
 // @version         1.0
 // @description     This is the API for the service-mqtt device management service.
-// @host            localhost:9091
 // @BasePath        /
 func main() {
 	// 1. ---- Structured Logger ----
