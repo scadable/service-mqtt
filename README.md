@@ -18,6 +18,8 @@ The service is designed to be scalable and is deployable on Kubernetes.
 
 The diagram below illustrates the flow of data and interactions between the different components of the system.
 
+<img alt="image" src="https://github.com/user-attachments/assets/841db167-89d7-4a45-8371-f8a7ad2065b3" />
+
 
 **Flow Description**:
 
