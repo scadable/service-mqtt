@@ -1,7 +1,3 @@
-Of course\! Here's a basic README file that explains the system.
-
------
-
 # Service-MQTT
 
 This service manages MQTT-enabled devices. Its primary functions are:
@@ -19,7 +15,6 @@ The service is designed to be scalable and is deployable on Kubernetes.
 The diagram below illustrates the flow of data and interactions between the different components of the system.
 
 <img alt="image" src="https://github.com/user-attachments/assets/841db167-89d7-4a45-8371-f8a7ad2065b3" />
-
 
 **Flow Description**:
 
@@ -94,6 +89,38 @@ You can run the entire system locally using Docker Compose.
 
     * The MQTT broker will be available on port `1883`.
     * The HTTP API will be available on port `9091`.
+
+-----
+
+## Publishing a Message
+
+Once the service is running, you can test it by provisioning a device and publishing a message with it.
+
+1.  **Provision a New Device**
+
+    Open a new terminal and use `curl` to send a request to the API to create a new device. This will return the credentials needed to connect to the MQTT broker.
+
+    ```sh
+    curl -X POST http://localhost:9091/devices -d '{"type":"test-device"}'
+    ```
+
+    You will get a JSON response with an `mqtt_user` (which is the same as the `id`) and an `mqtt_password`.
+
+2.  **Publish a Message**
+
+    Use the `eclipse-mosquitto` Docker image to publish a message. Replace `<YOUR_USERNAME>` and `<YOUR_PASSWORD>` with the credentials you received from the API call. The topic should be in the format `raw.<YOUR_USERNAME>`.
+
+    ```sh
+    docker run --rm -it --network=host eclipse-mosquitto mosquitto_pub \
+    -h localhost \
+    -p 1883 \
+    -u "<YOUR_USERNAME>" \
+    -P "<YOUR_PASSWORD>" \
+    -t "raw.<YOUR_USERNAME>" \
+    -m "Hello from my new device!"
+    ```
+
+    You should see the message being forwarded to NATS in the logs from the `docker-compose up` command.
 
 -----
 
